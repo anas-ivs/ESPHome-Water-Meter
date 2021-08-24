@@ -12,14 +12,14 @@ I started off with a cheap and easy to buy YF-S201 Hall Effect Water Meter flow 
 
 Hence Phase 1a was deployed but came with challenges:
 
-![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\actual\yf-s201.jpg)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/yf-s201.jpg)
 
 1. 1/2" connection didn't fit well with poly pipe couplers with minor drip leak observed.  Reapplying thick layers of PTFE tape didn't help either so applied PVC glue, let it cure and the drip leaks eventually stopped.
 2. Flow rate pulse is characterized as `Frequency (Hz) = 7.5 * Flow rate (L/min)` . Implemented this in ESPHome but was struggling to see acceptable values - mostly over and beyond the meter faceplate flow rate of `1-30 L/min`. Despite having learnt and worked on Field Instrumentations 10 years ago - later did I realized this water turbine meter is undersized hence the overrange readings! Durh. 
 
 Hence Phase 1b was sanctioned to resize the meter:
 
-![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\actual\yf-dn40.jpg)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/yf-dn40.jpg)
 
 1. Triggered happily the 'checkout-now' when a DN40 turbine meter recommendations showed up in Shop** . 
 2. Only realized upon arrival DN40 - 1 1/2" inches is not a normal household size relative to current mains sized at DN25 - 1"! 
@@ -34,9 +34,9 @@ AliExpre** was reading my search and purchase history - smartly showed me some p
 
 4-20mA solutions mostly came in to also supply power at 12vdc or more, and a current measurement mechanism to read back output current from transmitters. Solutions are available but too costly and the plugin board may need more tinkering to work with ESPHome existing libraries. Hence settled for this [5V based 0.5-4.5Vdc output , 0-174 psi transmitter](https://www.aliexpress.com/item/32656389610.html?spm=a2g0s.9042311.0.0.b5d94c4dM5VH00). 
 
-Some other notes from this phase:
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/PressureTx-Household.jpg)*
 
-*![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\actual\PressureTx-Household.jpg)*
+Some other notes from this phase:
 
 1. Pressure Tx came in 1/4" - Searched for adapters at local hardware shops but yet again not a common household size except for drinking water filters connections. Ended up shipping from Semenanjung from Shopp**.
 
@@ -46,13 +46,13 @@ Some other notes from this phase:
 
    The transmitters performed as specs - produced a straight line curve; though only then I realized my water pressures were no near to 60-80% range of the transmitters at max 12 bar/174 psi vs pump output at 6 bar. Again - oklah, for measuring water pressure only - not as [IPF tripping initator](https://control.com/textbook/process-safety-and-instrumentation/safety-instrumented-functions-and-systems/) or reading production critical Compressor Discharge Pressures (CDP) / Trunkline Export pressures!
    
-   ![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\actual\pressureTx-benchtest.jpg)
+   ![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/pressureTx-benchtest.jpg)
 
 ### Phase 3 : Filter Backwash automation
 
 This is yet to commence but whats gets me motivated is to find the best mechanism to drive this sand filter 3 way multiport valve; requiring step turns at 0-90-180 angles. 
 
-![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\actual\Inkedwater-filter-three-way-valve-draw.jpg)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/Inkedwater-filter-three-way-valve-draw.jpg)
 
 Currently exploring a few ideas:
 
@@ -75,13 +75,13 @@ Basic concept is to drive irrigation by 12vdc valves - Not a priority for now bu
 
 **This would be my first drawing using EasyEDA - yet to master this software beyond drawing simple hookup diagrams. For illustration only.
 
-![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\Electronic Schematics - Visual.png)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/Electronic%20Schematics%20-%20Visual.png)
 
 ### Visual connection Diagram
 
 **Drawn using handy old Powerpoint. Component images from the internet and are not mine.
 
-![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\Wiring Schematics - Visual.png)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/Wiring%20Schematics%20-%20Visual.png)
 
 
 
@@ -115,7 +115,7 @@ Other consumables - terminal blocks, dupont jumper wires (male/female), [PCB Spa
 
 ## <a name="code">Code </a>
 
-Download code from repo [here](http////).
+Download code from repo [here](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/diy_watermeter.yml).
 
 ```yaml
 substitutions:
@@ -409,11 +409,11 @@ ota:
 
 ## <a name="automations">Lovelace and Automations</a>
 
-![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\lovelace-water consumption.PNG)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/lovelace-water%20consumption.PNG)
 
-![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\lovelace-water consumption-weekly.PNG)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/lovelace-water%20consumption-weekly.PNG)
 
-![](C:\Users\user\Documents\GitHub\ESPHome-Water-Meter\images\lovelace.PNG)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/lovelace.PNG)
 
 WIP. No automations yet as still in data gathering. Some early ideas to be implemented in Node Red:
 
