@@ -2,22 +2,29 @@
 Having embarked on SESCO (Electric) Meter node to measure my house electrical consumption, this project is similarly on mission to measure and automate another important utility consumed by the house - Water (supplied here by LAKU in Sarawak) using Home Assistant &amp; ESP Home.
 ![visitors](https://visitor-badge.glitch.me/badge?page_id=anas-ivs.esphome-watermeterpage.visitor-badge)
 
-[Development](#development) |  [Hookup Diagram](#wiring) | [Bill of Materials](#BoM) | [Code](#code) | [Automations](#automations) | [References](#references) |
+[Project Objectives](#objectives)  | [Development](#development) |  [Hookup Diagram](#wiring) | [Bill of Materials](#BoM) | [Code](#code) | [Automations](#automations) | [References](#references) |
+
+## <a name="objectives">Project Objectives</a>
+
+- Power measurement and remote switch for Water Pump (Not covered here. This was just hooking up Sonoff POWR2).
+- Water consumption reporting on hourly, daily, monthly interval vs. current monthly bill reporting. 
+- Notifications for anomalies or where intervention is required i.e. water cutoff, backwash, leak detection.
+- Solenoid automation i.e. force natural flow when inlet pressure is sufficient to reduce power use from water pump, irrigate garden, etc.
 
 ## <a name="development">Development</a>
 
 ### Phase 1 : Water Flow Rate measurement, May-June 2021
 
-I started off with a cheap and easy to buy YF-S201 Hall Effect Water Meter flow sensor. Having not doing any research beforehand - the basic idea was since the meter was giving pulse outputs - applying similar `pulse_counter` feature as implemented on the Power Meter skids would give me my water flow rate readings per min/seconds and summing it up would give total water volume consumed.
+I started off with a cheap and easy to buy YF-S201 Hall Effect Water Meter flow sensor. Having not doing any research beforehand - the basic idea was since the meter provide pulse outputs - applying similar `pulse_counter` feature as implemented on the Power Meter skids would give me my water flow rate readings per min/seconds and summing it up would give total water volume consumed.
 
-Hence Phase 1a was deployed but came with challenges:
+Hence Phase 1a was deployed but came with challenges noted below:
 
 ![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/yf-s201.jpg)
 
 1. 1/2" connection didn't fit well with poly pipe couplers with minor drip leak observed.  Reapplying thick layers of PTFE tape didn't help either so applied PVC glue, let it cure and the drip leaks eventually stopped.
 2. Flow rate pulse is characterized as `Frequency (Hz) = 7.5 * Flow rate (L/min)` . Implemented this in ESPHome but was struggling to see acceptable values - mostly over and beyond the meter faceplate flow rate of `1-30 L/min`. Despite having learnt and worked on Field Instrumentations 10 years ago - later did I realized this water turbine meter is undersized hence the overrange readings! Durh. 
 
-Hence Phase 1b was sanctioned to resize the meter:
+Hence Phase 1b was sanctioned to resize to a bigger meter:
 
 ![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/yf-dn40.jpg)
 
@@ -30,7 +37,7 @@ Also included a 2 channel relay; reserved for future phase 4 to (re)deploy and u
 
 ### Phase 2 : Water Pressure measurement, August 2021
 
-AliExpre** was reading my search and purchase history - smartly showed me some pressure transducers product recommendations. I research through finding if 4-20mA based transducers similar to ones used in my line of work would be better instead of  voltage based alternatives. 
+AliExpre** knowingly showed me some pressure transducers product recommendations. I research through finding if 4-20mA based transducers similar to ones used in my line of work would be better instead of  voltage based alternatives. 
 
 4-20mA solutions mostly came in to also supply power at 12vdc or more, and a current measurement mechanism to read back output current from transmitters. Solutions are available but too costly and the plugin board may need more tinkering to work with ESPHome existing libraries. Hence settled for this [5V based 0.5-4.5Vdc output , 0-174 psi transmitter](https://www.aliexpress.com/item/32656389610.html?spm=a2g0s.9042311.0.0.b5d94c4dM5VH00). 
 
@@ -38,7 +45,7 @@ AliExpre** was reading my search and purchase history - smartly showed me some p
 
 Some other notes from this phase:
 
-1. Pressure Tx came in 1/4" - Searched for adapters at local hardware shops but yet again not a common household size except for drinking water filters connections. Ended up shipping from Semenanjung from Shopp**.
+1. Pressure Tx came in 1/4" - Searched for adapters at local hardware shops but yet again not a common household size except for drinking water filters connections. Ended up shipping from Semenanjung via Shopp**.
 
 2. NodeMCU ESP8266 comes with only 1 ADC channel and reading range of 0-3.3V; more than what the transmitter would output at upto 4.5V. Since I needed more Analogs channels I could swap for ESP32 with voltage divider circuit to bring it down to 3.3V; or use a analog to digital multiplexer - ADC1115. Went for the ADC1115 route which despite an additional board, IMO is simpler and yields better accuracy.
 
@@ -46,11 +53,11 @@ Some other notes from this phase:
 
    The transmitters performed as specs - produced a straight line curve; though only then I realized my water pressures were no near to 60-80% range of the transmitters at max 12 bar/174 psi vs pump output at 6 bar. Again - oklah, for measuring water pressure only - not as [IPF tripping initator](https://control.com/textbook/process-safety-and-instrumentation/safety-instrumented-functions-and-systems/) or reading production critical Compressor Discharge Pressures (CDP) / Trunkline Export pressures!
    
-   ![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/pressureTx-benchtest.jpg)
+   ![Literally a real bench test!](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/pressureTx-benchtest.jpg)
 
 ### Phase 3 : Filter Backwash automation
 
-This is yet to commence but whats gets me motivated is to find the best mechanism to drive this sand filter 3 way multiport valve; requiring step turns at 0-90-180 angles. 
+This is yet to commence but what gets me motivated is to find the best mechanism to drive this sand filter 3 way multiport valve; requiring step turns at close to 0-90-180 angles. 
 
 ![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/Inkedwater-filter-three-way-valve-draw.jpg)
 
@@ -62,7 +69,7 @@ Currently exploring a few ideas:
 
 Ruled out:
 
-- Off the shelf actuators - too costly (RM500++) and is timer based - defeats the purpose to have it 'IOT' connected.
+- Off the shelf actuators - too costly (RM500++) and is timer based - defeats the purpose to have it Smart Home IOT connected.
 - Valve couplers - Have 2 pcs ordered last year, not yet installed anywhere in the house but limited to 90degree turns and on/off mechanism with limit switch as end stoppers - No rotary encoders to do partial turns. 
 
 ### Phase 4 : Garden Irrigation automation
@@ -70,6 +77,12 @@ Ruled out:
 Basic concept is to drive irrigation by 12vdc valves - Not a priority for now but would want to see later if rework can be done to convert existing single zone irrgation (one master valve irrgates front and backyard) to multiple zones (at least three) - but this will require digging up and laying new pipes.
 
 ## <a name="wiring">Hookup Diagram </a>
+
+### PFS
+
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/ESPHomeWaterMeterPEFS.png)
+
+
 
 ### EasyEDA Connection diagram
 
@@ -85,9 +98,13 @@ Basic concept is to drive irrigation by 12vdc valves - Not a priority for now bu
 
 
 
+Final layout as per phase 2:
+
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/db-box.jpg)
+
 ## <a name="BoM">Bill of Materials </a>
 
-A combination of local sellers and international - mostly via Shop** and A**Express and also some local hardware stores too!. Links are for sharing and verify, proceed at own risk for seller latest validity/reputation.
+A combination of local sellers and international - mostly via Shop** and A**Express and also some local hardware stores too. Links are for sharing and verify, proceed at own risk for sellers latest validity/reputation.
 
 Hardware
 
@@ -111,7 +128,7 @@ Electronics
 | 5    | Fittings and Poly couplers for pressure transmitters       | RM4.50 (Fittings) + RM9.00 couplers | 3 sets   | RM40                       | This time another search looking at local hardware stores and couldnt locate any 1/4" to 3/4" or 1/2" couplers that I can fit to DN25 Female Poly Tee.<br /><br /><br />So search online and landed on this [SUS304 1/4" to 1" fitting.](https://shopee.com.my/SUS304-STAINLESS-STEEL-PIPING-FITTINGS-PIPE-FITTING-REDUCING-BUSH-WITH-BSP-THREAD-(1-4-to-1-)-i.92100121.7206904649) |
 |      | Total Electronics                                          |                                     |          | RM196.20                   | Buy local electrical store where possible.                   |
 
-Other consumables - terminal blocks, dupont jumper wires (male/female), [PCB Spacer](https://shopee.com.my/100Pcs-HC-5-3mm-Nylon-Plastic-Stick-On-PCB-Spacer-Standoff-Locking-Snap-In-Posts-Fixed-Clips-Adhesive-Kit-i.190324344.7008938135)
+Other consumables - terminal blocks, cable glands, dupont jumper wires (male/female), [PCB Spacer](https://shopee.com.my/100Pcs-HC-5-3mm-Nylon-Plastic-Stick-On-PCB-Spacer-Standoff-Locking-Snap-In-Posts-Fixed-Clips-Adhesive-Kit-i.190324344.7008938135)
 
 ## <a name="code">Code </a>
 
@@ -405,8 +422,6 @@ ota:
 
 
 
-
-
 ## <a name="automations">Lovelace and Automations</a>
 
 ![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/lovelace-water%20consumption.PNG)
@@ -415,11 +430,15 @@ ota:
 
 ![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/lovelace.PNG)
 
-WIP. No automations yet as still in data gathering. Some early ideas to be implemented in Node Red:
+Work in progress. No automations yet as still in data gathering. Some early ideas to be implemented in Node Red:
 
 1. Alert if inlet pressure goes to 0 to indicate water supply cutoff. Evaluate only if flow meter is 0 (not flowing).
-2. Perform household minute leak check during quiet hours. Record pressure, and compare drop after interval. Abort test if flow meter register reading. 
-3. Backwash - evaluate filter dP above defined threshold and evaluate only during no flow conditions. Store and compare max DP recorded over days/weeks to inform increased dP
+2. Perform household minute leak check during quiet hours (similar to Pressure Leak check sequence during Gas Turbine startup hahaha!). Record pressure, and compare how many psi dropped after interval, compare against acceptable leakage. Abort test if flow meter register reading. 
+3. Backwash - evaluate filter dP if above defined threshold and evaluate only during no flow conditions. Store and compare max DP recorded over days/weeks to inform if dP is on increasing trend.
+
+Current observations:
+
+- Household supply water pressure at no flow would be higher than Mains water and Tank Water supply (after filter). Can attribute this to the static head to the highest water point in the house. 
 
 ## <a name="references">References</a>
 
