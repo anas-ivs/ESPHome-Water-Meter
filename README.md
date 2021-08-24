@@ -80,7 +80,7 @@ Basic concept is to drive irrigation by 12vdc valves - Not a priority for now bu
 
 ### PFS
 
-![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/ESPHomeWater%20MeterPEFS.png)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/ESPHomeWaterMeterPEFS.png)
 
 
 
