@@ -1,0 +1,283 @@
+substitutions:
+  name: diy-watermeter
+  friendly_name: Diy Watermeter
+  
+esphome:
+  name: diy-watermeter
+  platform: ESP8266
+  board: nodemcuv2
+
+wifi:
+  ssid: !secret wifi
+  password: !secret wifi_pass
+
+    
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Diy Watermeter Fallback Hotspot"
+    password: !secret ap_pass
+
+captive_portal:
+
+# esp8266 gpio layout
+# D0
+# D1 - I2C - ADS1115 SCL / Former pulse counter
+# D2 - I2C - ADS1115 SDA
+  # ADS1115
+  # Channel A0 - Incoming
+  # Channel A1 - After Filter (Tank)
+  # Channel A2 - Household
+  # Channel A3 - Spare
+# D3 
+# D4
+# D5 - Water Pulse Counter / Former Relay
+# D6 - Relay
+# D7 - Relay
+# D8
+# RX
+# TX
+# A0
+
+i2c:
+  sda: D2
+  scl: D1
+  scan: true
+  id: bus_a
+  
+ads1115:
+  - address: 0x48
+  
+sensor:
+  - platform: ads1115
+    multiplexer: 'A0_GND'
+    gain: 6.144 
+    name: "A0 Voltage - Incoming Pressure Transmitter"
+    device_class: voltage
+    state_class: "measurement"
+    update_interval: 30s
+    
+  - platform: ads1115
+    multiplexer: 'A0_GND'
+    gain: 6.144 
+    name: "Main Water pressure - Bar"
+    id: main_water_supply_bar
+    device_class: pressure
+    state_class: "measurement"
+    icon: "mdi:gauge"
+    accuracy_decimals: 2
+    filters:
+      - calibrate_linear:
+            - 0.633 -> 0.34  
+            - 0.862 -> 1.03
+            - 1.11 -> 1.72
+            - 1.47 -> 2.75
+            - 1.63 -> 3.47
+            - 2.02 -> 4.48
+            - 2.01 -> 4.68
+    unit_of_measurement: bar
+    update_interval: 30s    
+    
+  - platform: ads1115
+    multiplexer: 'A0_GND'
+    gain: 6.144 
+    name: "Main Water pressure - Psi"
+    id: main_water_supply_psi
+    device_class: pressure
+    state_class: "measurement"
+    icon: "mdi:gauge"
+    accuracy_decimals: 2
+    filters:
+      - calibrate_linear:
+            - 0.633 -> 5.0  
+            - 0.862 -> 15.0
+            - 1.11 -> 25.0
+            - 1.47 -> 40.0
+            - 1.63 -> 50.0
+            - 2.02 -> 65.0
+            - 2.01 -> 68.0
+    unit_of_measurement: psi
+    update_interval: 30s    
+    
+    
+  - platform: ads1115
+    multiplexer: 'A1_GND'
+    gain: 6.144 
+    name: "A1 Voltage - Tank Transmitter"
+    device_class: voltage
+    state_class: "measurement"
+    id: a1_voltage
+    update_interval: 30s    
+    
+    
+  - platform: ads1115
+    multiplexer: 'A1_GND'
+    gain: 6.144 
+    name: "Tank Water supply pressure - Bar"
+    id: tank_water_supply_bar
+    device_class: pressure
+    state_class: "measurement"
+    icon: "mdi:gauge"
+    accuracy_decimals: 2
+    filters:
+      - calibrate_linear:
+            - 0.633 -> 0.34  
+            - 0.862 -> 1.03
+            - 1.11 -> 1.72
+            - 1.47 -> 2.75
+            - 1.63 -> 3.47
+            - 2.02 -> 4.48
+            - 2.01 -> 4.68
+    unit_of_measurement: bar
+    update_interval: 30s    
+    
+  - platform: ads1115
+    multiplexer: 'A1_GND'
+    gain: 6.144 
+    name: "Tank Water supply pressure - Psi"
+    id: tank_water_supply_psi
+    device_class: pressure
+    state_class: "measurement"
+    icon: "mdi:gauge"
+    accuracy_decimals: 2
+    filters:
+      - calibrate_linear:
+            - 0.633 -> 5.0  
+            - 0.862 -> 15.0
+            - 1.11 -> 25.0
+            - 1.47 -> 40.0
+            - 1.63 -> 50.0
+            - 2.02 -> 65.0
+            - 2.01 -> 68.0
+    unit_of_measurement: psi
+    update_interval: 30s    
+    
+    
+  - platform: ads1115
+    multiplexer: 'A2_GND'
+    gain: 6.144 
+    name: "A2 Voltage - Household Transmitter"
+    device_class: voltage
+    state_class: "measurement"
+    id: a2_voltage
+    update_interval: 30s
+    
+  - platform: ads1115
+    multiplexer: 'A2_GND'
+    gain: 6.144 
+    name: "Household supply water pressure - Bar"
+    id: household_water_supply_bar
+    device_class: pressure
+    state_class: "measurement"
+    icon: "mdi:gauge"
+    accuracy_decimals: 2
+    filters:
+      - calibrate_linear:
+            - 0.633 -> 0.34  
+            - 0.862 -> 1.03
+            - 1.11 -> 1.72
+            - 1.47 -> 2.75
+            - 1.63 -> 3.47
+            - 2.02 -> 4.48
+            - 2.01 -> 4.68
+    unit_of_measurement: bar
+    update_interval: 30s  
+    
+  - platform: ads1115
+    multiplexer: 'A2_GND'
+    gain: 6.144 
+    name: "Household supply water pressure - Psi"
+    id: household_water_supply_psi
+    device_class: pressure
+    state_class: "measurement"
+    icon: "mdi:gauge"
+    accuracy_decimals: 2
+    filters:
+      - calibrate_linear:
+            - 0.633 -> 5.0  
+            - 0.862 -> 15.0
+            - 1.11 -> 25.0
+            - 1.47 -> 40.0
+            - 1.63 -> 50.0
+            - 2.02 -> 65.0
+            - 2.01 -> 68.0
+    unit_of_measurement: psi
+    update_interval: 30s    
+
+  - platform: ads1115
+    multiplexer: 'A3_GND'
+    gain: 6.144 
+    name: "A3 - Voltage Ref"
+    device_class: voltage
+    state_class: "measurement"
+    id: a3_voltage
+    update_interval: 30s
+    
+
+  - platform: template
+    name: "Water Filter DeltaP - bar"
+    device_class: pressure
+    state_class: "measurement"
+    lambda: return ( id(main_water_supply_bar).state - id(tank_water_supply_bar).state );
+    unit_of_measurement: bar
+    update_interval: 30s    
+    
+  - platform: template
+    name: "Water Filter DeltaP - psi"
+    device_class: pressure
+    state_class: "measurement"
+    lambda: return ( id(main_water_supply_psi).state - id(tank_water_supply_psi).state );
+    unit_of_measurement: psi
+    update_interval: 30s    
+
+  - platform: pulse_counter
+    pin: D5
+    unit_of_measurement: 'L/min'
+    accuracy_decimals: 1
+    update_interval: 60s
+    name: 'Water Meter House'
+    filters:
+    - lambda: return (x / 27.0);  
+    
+    total:
+      unit_of_measurement: 'L'
+      name: 'Water Meter Total'
+      accuracy_decimals: 1
+      filters:
+      - lambda: return (x / 27.0);
+
+  - platform: wifi_signal
+    name: "${friendly_name} Wifi "
+    update_interval: 60s
+
+switch:
+  - platform: gpio
+    pin: D6
+    name: "Backyard Sprinkler Valve (NC)"  
+    id: backyardsprinkler_valve    
+
+  - platform: gpio
+    pin: D7
+    name: "Water Main Natural Flow to House Valve (NO)"  
+    id: watermain_naturalflow_valve 
+
+  - platform: restart
+    name: "${friendly_name} Restart"
+    
+
+text_sensor:
+  - platform: version
+    name: ${friendly_name} ESPHome Version
+    
+
+# Enable logging
+logger:
+
+web_server:
+  port: 80
+
+# Enable Home Assistant API
+api:
+  reboot_timeout : 0s
+    
+ota:
+
