@@ -78,7 +78,7 @@ Basic concept is to drive irrigation by 12vdc valves - Not a priority for now bu
 
 ## <a name="wiring">Hookup Diagram </a>
 
-### PFS
+### Process Flow Diagram
 
 ![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/ESPHomeWaterMeterPEFS.png)
 
@@ -100,7 +100,7 @@ Basic concept is to drive irrigation by 12vdc valves - Not a priority for now bu
 
 Current cramped layout as per phase 2:
 
-![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/db-box.jpg)
+![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/db-box-p2.jpg)
 
 ## <a name="BoM">Bill of Materials </a>
 
