@@ -6,9 +6,9 @@ Having embarked on SESCO (Electric) Meter node to measure my house electrical co
 
 ## <a name="objectives">Project Objectives</a>
 
-- Power measurement and remote switch for Water Pump (Not covered here. This was just hooking up Sonoff POWR2).
+- Power measurement and remote switch for Water Pump (Not covered here. This was just hooking up to a [Sonoff POWR2](https://sonoff.tech/product/diy-smart-switch/powr2/) flashed with [Tasmota](https://tasmota.github.io/docs/)).
 - Water consumption reporting on hourly, daily, monthly interval vs. current monthly bill reporting. 
-- Notifications for anomalies or where intervention is required i.e. water cutoff, backwash, leak detection.
+- Notifications for anomalies or where intervention is required i.e. water supply cutoff, backwash required, leak detection.
 - Solenoid automation i.e. force natural flow when inlet pressure is sufficient to reduce power use from water pump, irrigate garden, etc.
 
 ## <a name="development">Development</a>
@@ -37,7 +37,7 @@ Also included a 2 channel relay; reserved for future phase 4 to (re)deploy and u
 
 ### Phase 2 : Water Pressure measurement, August 2021
 
-AliExpre** knowingly showed me some pressure transducers product recommendations. I research through finding if 4-20mA based transducers similar to ones used in my line of work would be better instead of  voltage based alternatives. 
+AliExpre** must have been reading my mind, having to advertise some pressure transducers product recommendations. I research through finding if 4-20mA based transducers similar to ones used in my line of work would be better instead of  voltage based alternatives. 
 
 4-20mA solutions mostly came in to also supply power at 12vdc or more, and a current measurement mechanism to read back output current from transmitters. Solutions are available but too costly and the plugin board may need more tinkering to work with ESPHome existing libraries. Hence settled for this [5V based 0.5-4.5Vdc output , 0-174 psi transmitter](https://www.aliexpress.com/item/32656389610.html?spm=a2g0s.9042311.0.0.b5d94c4dM5VH00). 
 
@@ -51,9 +51,9 @@ Some other notes from this phase:
 
 3. I had no other means to verify what my water mains or pump output pressure was or had been delivering. So I ordered a manual pressure gauge and did a bench test - to map out voltage reading to measured gauge pressure and coded in ESPhome the curve. 
 
-   The transmitters performed as specs - produced a straight line curve; though only then I realized my water pressures were no near to 60-80% range of the transmitters at max 12 bar/174 psi vs pump output at 6 bar. Again - oklah, for measuring water pressure only - not as [IPF tripping initator](https://control.com/textbook/process-safety-and-instrumentation/safety-instrumented-functions-and-systems/) or reading production critical Compressor Discharge Pressures (CDP) / Trunkline Export pressures!
-   
    ![Literally a real bench test!](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/pressureTx-benchtest.jpg)
+   
+   The transmitters performed as specs - produced a straight line curve; though only then I realized my water pressures were no near to 60-80% range of the transmitters at max 12 bar/174 psi vs pump output at 6 bar. Again - oklah, for measuring water pressure only - not as [IPF tripping initator](https://control.com/textbook/process-safety-and-instrumentation/safety-instrumented-functions-and-systems/) or reading production critical Compressor Discharge Pressures (CDP) / Trunkline Export pressures!
 
 ### Phase 3 : Filter Backwash automation
 
@@ -63,7 +63,7 @@ This is yet to commence but what gets me motivated is to find the best mechanism
 
 Currently exploring a few ideas:
 
-- 3d printing adapter to current valve handle - drive rotation by coupling to servo with the right torque value. 3d model for adapter can try to learn and scan using XboxOne camera. 
+- 3d printing adapter to current valve handle - drive rotation by coupling it to servo with the enough torque value. 3d model for adapter can try to learn and scan using XboxOne camera. 
 - Explore linear actuators? Current automatic window openers driven by chain can bend at angle - but can it still bend at 180? Want to explore
 - Ingress protection would need to built in as well.
 
@@ -98,7 +98,7 @@ Basic concept is to drive irrigation by 12vdc valves - Not a priority for now bu
 
 
 
-Final layout as per phase 2:
+Current cramped layout as per phase 2:
 
 ![](https://raw.githubusercontent.com/anas-ivs/ESPHome-Water-Meter/main/images/actual/db-box.jpg)
 
@@ -439,6 +439,8 @@ Work in progress. No automations yet as still in data gathering. Some early idea
 Current observations:
 
 - Household supply water pressure at no flow would be higher than Mains water and Tank Water supply (after filter). Can attribute this to the static head to the highest water point in the house. 
+
+  
 
 ## <a name="references">References</a>
 
