@@ -15,7 +15,7 @@ Having embarked on SESCO (Electric) Meter node to measure my house electrical co
 
 ### Phase 1 : Water Flow Rate measurement, May-June 2021
 
-I started off with a cheap and easy to buy YF-S201 Hall Effect Water Meter flow sensor. Having not doing any research beforehand - the basic idea was the meter provide pulse outputs - applying similar `pulse_counter` feature from [ESPHome](https://esphome.io/components/sensor/pulse_counter.html?highlight=pulse%20counter) as implemented on the Power Meter skids would give me my water flow rate readings per min/seconds and summing it up would give total water volume consumed.
+I started off with a cheap and easy to buy YF-S201 Hall Effect Water Meter flow sensor. Having not doing any research beforehand - the basic idea was the meter would produce pulse outputs - applying similar `pulse_counter` feature from [ESPHome](https://esphome.io/components/sensor/pulse_counter.html?highlight=pulse%20counter) as implemented on the Power Meter skids would give me my water flow rate readings per min/seconds and summing it up would give total water volume consumed.
 
 Hence Phase 1a was deployed but came with challenges noted below:
 
